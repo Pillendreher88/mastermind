@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\xampp\\htdocs\\mastermind"
+		},
+		{
+			"path": "..\\..\\repos\\myapp"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "..\\..\\countdown"
+		}
+	],
+  "settings": {}
+}
