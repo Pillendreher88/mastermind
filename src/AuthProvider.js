@@ -6,8 +6,10 @@ import { useAxios, addErrorHandler } from './api';
 
 const initAuthState = () => {
   const token = loadState('jwt');
+  console.log("token");
+  console.log(token);
 
-  return { user: {}, isAuthenticated: false, token, initialUserLoaded: token ? true : false };
+  return { user: {}, isAuthenticated: false, token, initialUserLoaded: token ? false : true };
 }
 
 export const AuthContext = React.createContext();
@@ -35,7 +37,6 @@ export default function AuthProvider({ children }) {
     if (token) {
       getUserProfile().catch(error => console.log(error));
     }
-    else updateAuthState({ initialUserLoaded: true })
   }, [token]);
 
   useEffect(() => {
@@ -60,13 +61,14 @@ export default function AuthProvider({ children }) {
       () => {
         resetAuth();
         alert( "logout", { name: loggedOutUser });
+        dispatch({ type: "RESET" });
+
       }
     );
   }
 
   const handleUnauthorized = () => {
 
-    console.log(state);
     if(isAuthenticated) {
       alert("sessionEnd");
       dispatch({ type: "RESET" });

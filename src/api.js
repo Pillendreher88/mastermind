@@ -130,6 +130,10 @@ export const useApi = (url, configAxios, options = {}) => {
   const [state, dispatch] = useApiState(initialState);
   const isMounted = useIsMounted();
 
+  const resetState = () => {
+    dispatch({ type: "RESET_STATE" })
+  }
+
   const source = axios.CancelToken.source();
 
   useEffect(() => {
@@ -174,6 +178,6 @@ export const useApi = (url, configAxios, options = {}) => {
     fetchData();
   }, [url, shouldFetch]);
 
-  return state;
+  return [state, resetState];
 }
 

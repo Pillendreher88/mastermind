@@ -4,6 +4,7 @@ import { Spinner } from "./loading/Spinner.js";
 import { Transition } from 'react-transition-group';
 import { months } from './Utility.js';
 import { StatsContext } from './mastermind/StatsProvider.js';
+import { Image } from 'react-bootstrap';
 
 function Badge({ style, children, onMouseEnter, onMouseLeave, color }) {
 
@@ -51,14 +52,15 @@ export const Header = () => {
   if (error) return "Error";
 
   return (
-    < HeaderView {...data} title={user.name} showInfo={showInfo}
+    < HeaderView {...data} user={user} showInfo={showInfo}
       onMouseOver={onMouseOver} onMouseOut={onMouseOut} />
   );
 }
 
-export const HeaderView = React.memo(({ user_stats_now = {},
+export const HeaderView = React.memo(({ 
+  user_stats_now = {},
   user_stats_allTime = {},
-  title,
+  user,
   showInfo,
   onMouseOver,
   onMouseOut }) => {
@@ -89,7 +91,13 @@ export const HeaderView = React.memo(({ user_stats_now = {},
 
   return (
     <div className="mm-header" onMouseEnter={onMouseOver} onMouseLeave={onMouseOut}>
-      <HeaderItem title={title}>
+      <HeaderItem title={user.name}>
+        <Image
+          alt=""
+          className = "mh-100"
+          fluid
+          src={'https://mongro.de/assets/images/avatars/100_100/' + user.avatar}/>
+
       </HeaderItem>
       <div className="d-flex flex-row ">
         <Transition in={showInfo} timeout={300}>
@@ -119,10 +127,10 @@ export const HeaderView = React.memo(({ user_stats_now = {},
 export const HeaderItem = React.memo(({ title, children }) => {
   return (
     <div className="d-flex flex-column flex-fill align-items-center justify-content-center border border-dark">
-      <div className="p-1 ">
+      <div className="p-1 h-25">
         {title}
       </div>
-      <div className="p-1 ">
+      <div className="p-1 h-75">
         {children}
       </div>
     </div>

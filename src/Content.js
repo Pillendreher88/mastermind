@@ -33,6 +33,9 @@ export default function Content() {
         <Col md={6} className={match ? null : "d-none d-md-block"}>
           <BoardContainer />
         </Col>
+        <Route path="/" exact>
+        {isAuthenticated ? <Redirect to="/profile"/> : <Redirect to="/options"/>}
+        </Route>
         <Route path={["/top10", "/help", "/login", "/options", "/profile"]}>
           <Col md={6}>
             <div className="mt-4 bg-secondary">

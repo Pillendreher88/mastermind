@@ -4,7 +4,8 @@ import { useApi } from "../api.js";
 
 const Table = ({ source, rowsMin, keys, columns }) => {
 
-  const { isLoading, error, data } = useApi(source, { method: 'get' });
+  const  [state]  = useApi(source, { method: 'get' });
+  const {isLoading, error, data} = state;
 
 
   if (isLoading) return <Spinner />
