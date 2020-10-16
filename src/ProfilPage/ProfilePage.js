@@ -8,13 +8,11 @@ import { Spinner } from '../loading/Spinner'
 import  MyStats  from './MyStats'
 import { useAxios } from '../api'
 import useSetFormikFieldErrors from '../useSetFormikFieldErrors'
-import { ModalContext } from '../ModalProvider'
 import { AuthContext } from '../AuthProvider'
 
 export default function ProfilePage() {
 
   const { updateUser, user } = useContext(AuthContext);
-  const { alert } = useContext(ModalContext);
   const [state, updateProfile] = useAxios("api/myaccount/update-profile", { method: 'post' });
   const [inputOpen, setInputOpen] = useState(false);
 
@@ -25,9 +23,7 @@ export default function ProfilePage() {
   function handleSubmit(values) {
     updateProfile({ data: values })
       .then((response) => {
-        const { user } = response.data;
         updateUser({ name: values.name });
-        //alert({ user, current_game}, "Welcome");
       }).catch(error => console.log(error));
   }
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { ColorPicker } from './ColorPicker.js';
 import BoardContainer from './Container';
 import { BoardThemeContext } from "./mastermind/BoardTheme.js";
@@ -38,7 +38,7 @@ export default function Content() {
         </Route>
         <Route path={["/top10", "/help", "/login", "/options", "/profile"]}>
           <Col md={6}>
-            <div className="mt-4 bg-secondary">
+            <div className="mt-4">
               <Route path="/options">
                 <BoardThemeContext.Consumer>
                   {colorTheme => 

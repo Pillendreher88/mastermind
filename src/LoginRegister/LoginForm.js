@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { AuthContext } from "../AuthProvider.js";
-import { ModalContext } from "../ModalProvider.js";
 import { Spinner } from "../loading/Spinner.js";
 import { Form, Alert } from 'react-bootstrap';
 import FormField from '../FormField.js';
@@ -10,7 +9,6 @@ import { Formik } from 'formik';
 const LoginForm = ({ onReset }) => {
 
   const { login, loginState, resetLogin } = useContext(AuthContext);
-  const { alert } = useContext(ModalContext);
 
   useEffect(() => {
     return () => resetLogin();

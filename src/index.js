@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Gamestate from './mastermind/Gamestate.js';
 import BoardTheme from './mastermind/BoardTheme.js';
-import StatsProvider from './mastermind/StatsProvider.js';
 import AuthProvider from "./AuthProvider.js";
 import './app.scss';
 import Content from './Content';
@@ -22,9 +21,7 @@ function App() {
           <Gamestate>
             <BoardTheme>
               <AuthProvider>
-                <StatsProvider>
-                  <Content />
-                </StatsProvider>
+                <Content />
               </AuthProvider>
             </BoardTheme>
           </Gamestate>

@@ -69,7 +69,7 @@ export default function ImageUpload({
         accept={accept} />
       <div onClick={fileUploadHandler} className="image-input-container">
         <LoadingWrapper loading={isLoading}>
-          {user.avatar ?
+          {user.avatar !== "default.jpg" ?
             <Image
               fluid
               alt=""

@@ -1,32 +1,17 @@
 import React, { useContext } from 'react';
 import Board from './mastermind/Board';
-import { GameInfoHandler } from './mastermind/Gamestate'
 import { AuthContext } from './AuthProvider';
-import { useApi, useAxios } from './api';
+import { useAxios } from './api';
 import LoadingWrapper from './loading/loadingWrapper';
-import { ModalContext } from "./ModalProvider.js";
-
-
-
 
 export default function Container() {
 
-  const dispatch = useContext(GameInfoHandler);
-  const { user, isAuthenticated } = useContext(AuthContext);
-  const { alert } = useContext(ModalContext);
+  const { isAuthenticated, getProfileState } = useContext(AuthContext);
 
-  const axiosConfig = { method: 'get' };
-  const onSuccess = (response) => {
-    console.log(user);
-    dispatch({ type: "LOAD_CURRENT_GAME", ...response.data });
-    alert("welcome", { name: user.name, current_game: response.data });
-  };
-  const { isLoading } = useApi("/api/mastermind/myGame", axiosConfig, { onSuccess, shouldFetch: isAuthenticated });
   const [state, callApi] = useAxios("/api/mastermind/myGame", { method: 'post' });
 
   const sendUserSolution = async (colors) => {
 
-    console.log(colors);
     const response = await callApi(
       {
         data: {
@@ -36,7 +21,6 @@ export default function Container() {
           "slot4": parseInt(colors[3]),
         }
       });
-    console.log(response);
 
     const { marker: hint, solution, finished, row } = response.data;
 
@@ -44,7 +28,7 @@ export default function Container() {
   }
 
   return (
-    <LoadingWrapper loading={isLoading}>
+    <LoadingWrapper loading={getProfileState.isLoading}>
       <Board onCheck={isAuthenticated ? sendUserSolution : null} />
     </LoadingWrapper>)
 }

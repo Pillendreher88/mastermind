@@ -1,29 +1,32 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { GameInfoHandler } from "./mastermind/Gamestate.js";
+import { GameInfo } from "./mastermind/Gamestate.js";
 import { ModalContext } from "./ModalProvider.js";
 import { loadState, saveState } from './localStorage.js';
 import { useAxios, addErrorHandler } from './api';
 
 const initAuthState = () => {
   const token = loadState('jwt');
-  console.log("token");
-  console.log(token);
-
   return { user: {}, isAuthenticated: false, token, initialUserLoaded: token ? false : true };
 }
 
 export const AuthContext = React.createContext();
+export const StatsContext = React.createContext();
 
 export default function AuthProvider({ children }) {
 
   const dispatch = useContext(GameInfoHandler);
+  const { finished } = useContext(GameInfo);
   const { alert } = useContext(ModalContext);
-
   const [state, setState] = useState(initAuthState());
-  const [getProfileState, getUserProfile] = useAxios('/api/auth/me', { method: 'post', data: { app: 'Mastermind' } },
+  const [stats, fetchStats, reset, dispatchStats] = useAxios("api/mastermind/my_stats", { method: 'get' });
+  const [getProfileState, getUserProfile] = useAxios('/api/mastermind/myProfile', { method: 'get' },
     {
       onSuccess: (response) => {
         updateAuthState({ user: response.data, isAuthenticated: true, initialUserLoaded: true });
+        dispatchStats({ type: "FETCH_SUCCESS", payload: response.data.stats });
+        dispatch({ type: "LOAD_CURRENT_GAME", ...response.data.current_game });
+        alert("welcome", { name: response.data.name, current_game: response.data.current_game, stats: response.data.stats });
       },
       onFailure: () => resetAuth(),
     });
@@ -40,6 +43,20 @@ export default function AuthProvider({ children }) {
   }, [token]);
 
   useEffect(() => {
+
+    if (!isAuthenticated) {
+      reset();
+    }
+  }, [isAuthenticated])
+
+  useEffect(() => {
+
+    if (finished) {
+      fetchStats();
+    }
+  }, [finished])
+
+  useEffect(() => {
     addErrorHandler(401, handleUnauthorized);
     addErrorHandler(500, () => alert("serverError"));
     addErrorHandler("network", () => alert("networkError"));
@@ -48,6 +65,11 @@ export default function AuthProvider({ children }) {
 
   const updateAuthState = (state) => {
     setState(prevState => ({ ...prevState, ...state }));
+  }
+
+  const saveToken = (token) => {
+    setState(prevState => ({ ...prevState, token }));
+    saveState("jwt", token);
   }
 
   const updateUser = (userProps) => {
@@ -60,7 +82,7 @@ export default function AuthProvider({ children }) {
     requestLogout().finally(
       () => {
         resetAuth();
-        alert( "logout", { name: loggedOutUser });
+        alert("logout", { name: loggedOutUser });
         dispatch({ type: "RESET" });
 
       }
@@ -69,7 +91,7 @@ export default function AuthProvider({ children }) {
 
   const handleUnauthorized = () => {
 
-    if(isAuthenticated) {
+    if (isAuthenticated) {
       alert("sessionEnd");
       dispatch({ type: "RESET" });
     }
@@ -87,9 +109,8 @@ export default function AuthProvider({ children }) {
 
     requestLogin({ data: credentials }).then(
       response => {
-        const { access_token } = response.data;
-        saveState("jwt", access_token);
-        updateAuthState({ user: {}, token: access_token });
+        const { access_token: token } = response.data;
+        saveToken(token);
       }
     ).catch(error => console.log(error));
   }
@@ -98,16 +119,20 @@ export default function AuthProvider({ children }) {
     ...state,
     updateUser,
     updateAuthState,
+    saveToken,
     logout,
     logoutState,
     loginState,
     login,
-    resetLogin
+    resetLogin,
+    getProfileState
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      <StatsContext.Provider value={stats}>
+        {children}
+      </StatsContext.Provider>
     </AuthContext.Provider>
   );
 }

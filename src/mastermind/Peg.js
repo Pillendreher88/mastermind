@@ -15,7 +15,6 @@ const Peg = React.memo(({
 
   const { colorPalette} = useContext(BoardThemeContext);
 
-  console.log("repeg");
   const boardClick = () => {
     if (active) {
       dispatch({ type: "PLACE_PIN", column });

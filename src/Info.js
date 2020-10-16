@@ -1,11 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
+import NavLink from './Nav/NavLink.js';
+import { Col } from 'react-bootstrap';
 
-export const Info = () => {
+
+
+const Info = () => {
 
   return (
-    <div className="info-message">
-      <p>You are not logged in.
-        In order to get your rounds saved and get ranked against other players, you have to create an account. </p>
-    </div>
+    <Col xs={12} md>
+      <div className="info-message">
+        <p>You are not logged in.
+        In order to get your rounds saved and get ranked, you have to create an account. </p>
+        <div className="my-nav-tab nav nav-pills">
+          <NavLink to="/login">
+            Go to Login
+          </NavLink>
+        </div>
+      </div>
+    </Col>
   );
 }
+
+export default Info;

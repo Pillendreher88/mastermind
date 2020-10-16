@@ -1,37 +1,27 @@
 import React, { useState } from 'react';
 import { Spinner } from "./loading/Spinner.js";
-import axios from "axios";
+import { useAxios } from './api.js';
 
 export const Reset = () => {
 
+  const [state, reset] = useAxios("https://mongro.de/api/auth/forgot", { method: 'post' });
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState();
   const [message, setMessage] = useState();
+  const { error, isLoading } = state;
+
 
   function handleOnChange(event) {
     const value = event.target.value;
     setEmail(value);
   }
   function handleSubmit(event) {
-    setLoading(true);
+    setMessage(null);
     event.preventDefault();
-    axios
-      .post("/password/email", { email: email })
+    reset({ data: { email } })
       .then((response) => {
-        setLoading(false);
         setMessage(response.data.message);
-        setError();
       })
-      .catch((error) => {
-        setLoading(false);
-        if (error.response && error.response.data.error) {
-          setError(error.response.data.error);
-        }
-        else {
-          console.log(error);
-        }
-      });
+      .catch(error => console.log(error));;
   }
 
   return (
@@ -53,13 +43,13 @@ export const Reset = () => {
                 onChange={handleOnChange}
                 placeholder="Your Email" />
               {error && <span className="invalid-feedback" role="alert">
-                <strong> {error} </strong>
+                <strong> {error.error} </strong>
               </span>}
             </div>
           </div>
           <div className="form-group row justify-content-center">
             <button type="submit" className="btn btn-primary">
-              {loading ? <Spinner /> : "Send Password Reset Link"}
+              {isLoading ? <Spinner /> : "Send Password Reset Link"}
             </button>
           </div>
         </form>

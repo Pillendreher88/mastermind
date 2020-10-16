@@ -4,7 +4,7 @@ import { loadState } from './localStorage';
 
 
 const api = axios.create({
-  baseURL: `https://mongro.de`,
+  baseURL: `http://localhost.laravelproject.com/`,
 });
 
 const errorHandlers = {};
@@ -105,12 +105,10 @@ export const useAxios = (url, configAxios, options = {}) => {
     } catch (error) {
 
       if (error.response) {
-        console.log(error.response.data);
         dispatch({ type: "FETCH_ERROR", payload: error.response.data });
         onFailure(error);
       }
       else if (error.request) {
-        console.log(error.request);
         dispatch({ type: "FETCH_ERROR", payload: "Network Error" });
         onFailure(error);
       } else {

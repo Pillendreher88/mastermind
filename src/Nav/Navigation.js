@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { AuthContext } from "../AuthProvider.js";
 import { Header } from '../Header.js';
-import { Button, Image } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import NavLink from './NavLink.js';
 import InfoIcon from '../icons/Info.js';
@@ -14,10 +14,14 @@ import AccountIcon from '../icons/Account.js';
 import ControllerIcon from '../icons/Controller.js';
 import LogoutIcon from '../icons/Logout.js';
 import AvatarIcon from '../icons/Avatar.js';
+import MenuIcon from '../icons/Menu.js';
+import { Transition } from 'react-transition-group';
+
 
 const Navigation = () => {
-  const { isAuthenticated, logout, user } = useContext(AuthContext);
+  const { isAuthenticated, logout } = useContext(AuthContext);
   const [show, setShow] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const renderNavLinks = () => {
     return (
@@ -46,7 +50,7 @@ const Navigation = () => {
         }
         {isAuthenticated &&
           <NavLink to="/profile">
-          <AvatarIcon/>
+            <AvatarIcon />
                 My Profile
           </NavLink>
         }
@@ -61,6 +65,25 @@ const Navigation = () => {
       </>
     );
   }
+
+
+  const style = {
+    position: "fixed",
+    left: 0,
+    top: 0,
+    padding: "0.5rem",
+    backgroundColor: "black",
+    width: "100%",
+    color: "white",
+    transition: "transform 0.7s ease",
+    zIndex: 1000,
+  };
+  const transitionStyles = {
+    entering: { transform: "translateY(0)"},
+    entered: { transform: "translateY(0)" },
+    exiting: { transform: "translateY(-100%)" },
+    exited: { transform: "translateY(-100%)"},
+  };
 
   return (
 
@@ -87,8 +110,26 @@ const Navigation = () => {
         </div>
       </Col>
       <Col className="bg-dark">
-        <Button className="d-md-none" size="lg" onClick={() => setShow(true)}>
-          <img src="/open-iconic-master/svg/menu.svg" width="25" height="25" alt="icon name" />
+        <Transition in={showInfo} timeout={300}>
+          {state => (
+            <div style={{ ...transitionStyles[state], ...style }}>
+              <Header closable onClose = {() => setShowInfo(false)}/>
+            </div>
+          )}
+        </Transition>
+        <Button 
+          variant="outline-light"
+          className="d-md-none mr-2" 
+          size="lg" 
+          onClick={() => setShow(true)}>
+          <MenuIcon />
+        </Button>
+        <Button 
+          variant="outline-light" 
+          className="d-md-none" 
+          size="lg" 
+          onClick={() => setShowInfo(true)}>
+          MyStats
         </Button>
         <div className="d-none d-md-block">
           <Nav variant="pills" className="my-nav-tab" >

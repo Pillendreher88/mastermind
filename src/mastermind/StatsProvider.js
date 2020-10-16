@@ -1,4 +1,4 @@
-
+/* 
 import React, { useContext, useEffect } from 'react';
 import { useApi } from "../api.js";
 import { AuthContext } from "../AuthProvider.js";
@@ -31,4 +31,4 @@ export default function StatsProvider({ children }) {
       {children}
     </StatsContext.Provider>
   )
-}
+} */

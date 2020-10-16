@@ -1,18 +1,17 @@
 
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { AuthContext } from '../AuthProvider.js';
-import { ModalContext } from '../ModalProvider.js';
 import { Spinner } from "../loading/Spinner.js";
 import { useAxios } from '../api.js';
 import { Formik } from 'formik';
-import { Form, Row, Col } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import useSetFormikFieldErrors from '../useSetFormikFieldErrors.js';
 import FormField from '../FormField.js';
 
 const RegisterForm = () => {
 
   const [state, register] = useAxios("api/auth/register", { method: 'post'});
-  const { updateUserInfo } = useContext(AuthContext);
+  const { saveToken } = useContext(AuthContext);
   const {error = {}, isLoading} = state;
 
   const formikRef = useSetFormikFieldErrors(error.errors);
@@ -20,10 +19,9 @@ const RegisterForm = () => {
   function handleSubmit(values) {
     register({ data: values})
       .then((response) => {
-        const { access_token, user } = response.data;
-        updateUserInfo(user, access_token, true);
-        //alert({ user, current_game}, "Welcome");
-      });
+        const { access_token : token } = response.data;
+        saveToken(token);
+      }).catch(error => console.log(error));
   }
 
   const validate = (values) => {

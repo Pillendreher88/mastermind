@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 import { Card, Row, Col } from 'react-bootstrap'
-import { StatsContext } from '../mastermind/StatsProvider';
-import { months, usePrevious } from '../Utility.js';
+import { StatsContext } from "../AuthProvider.js";
+import { months } from '../Utility.js';
 
 export default function MyStats() {
 
-  const { data = {}, isLoading } = useContext(StatsContext);
+  const { data = {} } = useContext(StatsContext);
   const { user_stats_now = {}, user_stats_allTime = {} } = data;
   const month = new Date().getMonth();
 
@@ -24,6 +24,9 @@ export default function MyStats() {
     </Row>)
   };
 
+  const rankNow =  user_stats_now.rank ?  user_stats_now.rank : `${10 - user_stats_now.games} games left`;
+  const rank =   user_stats_allTime.rank ?   user_stats_allTime.rank : `${10 -  user_stats_allTime.games} games left`;
+
   return (
 
     <Card>
@@ -34,7 +37,7 @@ export default function MyStats() {
         {renderRow("", months[month].label , "Overall")}
         {renderRow("Games", user_stats_now.games, user_stats_allTime.games)}
         {renderRow("Average", user_stats_now.average, user_stats_allTime.average)}
-        {renderRow("Rank", user_stats_now.rank, user_stats_allTime.rank)}
+        {renderRow("Rank", rankNow, rank)}
       </Card.Body>
     </Card>
 
