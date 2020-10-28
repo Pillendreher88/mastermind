@@ -64,7 +64,7 @@ const LoginRegister = () => {
           <Card.Body>
             <Card.Title>Test Account</Card.Title>
             <Card.Text>
-              Email: Test, password: test
+              Email: user@test.de, password: test
             </Card.Text>
           </Card.Body>
         </Card>

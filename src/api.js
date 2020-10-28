@@ -4,7 +4,7 @@ import { loadState } from './localStorage';
 
 
 const api = axios.create({
-  baseURL: `http://localhost.laravelproject.com/`,
+  baseURL: `https://mongro.de`,
 });
 
 const errorHandlers = {};
