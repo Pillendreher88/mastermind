@@ -51,10 +51,10 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
 
-    if (finished) {
+    if (finished && isAuthenticated) {
       fetchStats();
     }
-  }, [finished])
+  }, [finished, isAuthenticated])
 
   useEffect(() => {
     addErrorHandler(401, handleUnauthorized);
